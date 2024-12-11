@@ -11,7 +11,7 @@ locals {
     for sp in data.azuread_service_principals.spns.service_principals : sp.object_id => sp
   }
   
-  account_admin_members = toset(flatten([for group in values(data.azuread_group.this) : [group.display_name == "account_unity_admin" ? group.members : []]]))
+  account_admin_members = toset(flatten([for group in values(data.azuread_group.this) : [group.display_name == "databricks_unity_admin" ? group.members : []]]))
   
   all_account_admin_users = {
     for user in data.azuread_users.account_admin_users.users : user.object_id => user

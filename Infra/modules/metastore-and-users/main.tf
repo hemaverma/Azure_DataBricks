@@ -50,7 +50,7 @@ resource "databricks_metastore" "this" {
     azurerm_storage_container.unity_catalog.name,
   azurerm_storage_account.unity_catalog.name)
   force_destroy = true
-  owner         = "account_unity_admin"
+  owner         = "databricks_unity_admin"
 }
 
 # Introduce a delay after metastore creation
@@ -117,7 +117,7 @@ resource "databricks_service_principal" "sp" {
   force          = true
 }
 
-// Making all users on account_unity_admin group as databricks account admin
+// Making all users on databricks_unity_admin group as databricks account admin
 resource "databricks_user_role" "account_admin" {
   provider   = databricks.azure_account
   for_each   = local.all_account_admin_users

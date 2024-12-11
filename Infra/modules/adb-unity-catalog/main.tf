@@ -6,7 +6,7 @@ resource "databricks_storage_credential" "external_mi" {
     access_connector_id = var.azurerm_databricks_access_connector_id
   }
 
-  owner   = "account_unity_admin"
+  owner   = "databricks_unity_admin"
   comment = "Storage credential for all external locations"
 }
 
@@ -40,7 +40,7 @@ resource "databricks_external_location" "landing" {
   name            = local.data_layers[0].external_location
   url             = format("abfss://%s@%s.dfs.core.windows.net/", local.data_layers[0].storage_container, var.azurerm_storage_account_unity_catalog.name)
   credential_name = databricks_storage_credential.external_mi.id
-  owner           = "account_unity_admin"
+  owner           = "databricks_unity_admin"
   comment         = "External location for landing container"
 }
 
@@ -48,7 +48,7 @@ resource "databricks_external_location" "bronze" {
   name            = local.data_layers[1].external_location
   url             = format("abfss://%s@%s.dfs.core.windows.net/", local.data_layers[1].storage_container, var.azurerm_storage_account_unity_catalog.name)
   credential_name = databricks_storage_credential.external_mi.id
-  owner           = "account_unity_admin"
+  owner           = "databricks_unity_admin"
   comment         = "External location for bronze container"
 }
 
@@ -56,7 +56,7 @@ resource "databricks_external_location" "silver" {
   name            = local.data_layers[2].external_location
   url             = format("abfss://%s@%s.dfs.core.windows.net/", local.data_layers[2].storage_container, var.azurerm_storage_account_unity_catalog.name)
   credential_name = databricks_storage_credential.external_mi.id
-  owner           = "account_unity_admin"
+  owner           = "databricks_unity_admin"
   comment         = "External location for silver container"
 }
 
@@ -64,7 +64,7 @@ resource "databricks_external_location" "gold" {
   name            = local.data_layers[3].external_location
   url             = format("abfss://%s@%s.dfs.core.windows.net/", local.data_layers[3].storage_container, var.azurerm_storage_account_unity_catalog.name)
   credential_name = databricks_storage_credential.external_mi.id
-  owner           = "account_unity_admin"
+  owner           = "databricks_unity_admin"
   comment         = "External location for gold container"
 }
 
@@ -73,7 +73,7 @@ resource "databricks_catalog" "environment" {
   metastore_id = var.metastore_id
   name         = local.catalog_name
   comment      = "Catalog for ${local.environment} environment"
-  owner        = "account_unity_admin"
+  owner        = "databricks_unity_admin"
 
   storage_root = replace(databricks_external_location.landing.url, "/$", "")
 
@@ -88,17 +88,17 @@ resource "databricks_grants" "environment_catalog" {
 
   # Standard grants for all roles
   grant {
-    principal  = "data_engineer"
+    principal  = "databricks_data_engineer"
     privileges = ["USE_CATALOG"]
   }
 
   grant {
-    principal  = "data_scientist"
+    principal  = "databricks_data_scientist"
     privileges = ["USE_CATALOG"]
   }
 
   grant {
-    principal  = "data_analyst"
+    principal  = "databricks_data_analyst"
     privileges = ["USE_CATALOG"]
   }
 }
@@ -108,21 +108,21 @@ resource "databricks_grants" "environment_catalog" {
 resource "databricks_schema" "bronze_schema" {
   catalog_name = databricks_catalog.environment.id
   name         = local.data_layers[1].name
-  owner        = "account_unity_admin"
+  owner        = "databricks_unity_admin"
   comment      = "Schema for bronze layer in ${local.catalog_name}"
 }
 
 resource "databricks_schema" "silver_schema" {
   catalog_name = databricks_catalog.environment.id
   name         = local.data_layers[2].name
-  owner        = "account_unity_admin"
+  owner        = "databricks_unity_admin"
   comment      = "Schema for silver layer in ${local.catalog_name}"
 }
 
 resource "databricks_schema" "gold_schema" {
   catalog_name = databricks_catalog.environment.id
   name         = local.data_layers[3].name
-  owner        = "account_unity_admin"
+  owner        = "databricks_unity_admin"
   comment      = "Schema for gold layer in ${local.catalog_name}"
 }
 
@@ -163,18 +163,18 @@ resource "databricks_grants" "gold_schema_permissions" {
 
   # Standard grants for gold schema
   grant {
-    principal  = "data_engineer"
+    principal  = "databricks_data_engineer"
     privileges = ["USE_SCHEMA", "CREATE_FUNCTION", "CREATE_TABLE", "EXECUTE", "MODIFY", "SELECT"]
   }
 
   grant {
-    principal  = "data_scientist"
+    principal  = "databricks_data_scientist"
     privileges = ["USE_SCHEMA", "SELECT"]
   }
 
-  # Additional grants for data_analyst on the gold schema
+  # Additional grants for databricks_data_analyst on the gold schema
   grant {
-    principal  = "data_analyst"
+    principal  = "databricks_data_analyst"
     privileges = ["USE_SCHEMA", "SELECT"]
   }
 }

@@ -19,18 +19,18 @@ module "metastore_and_users" {
   prefix                        = replace(replace(replace(lower(module.azure_databricks_workspace.resource_group), "rg", ""), "-", ""), "_", "")
 }
 
-module "azure_databricks_unity_catalog" {
-  source                                 = "../../modules/adb-unity-catalog"
-  environment                            = var.environment
-  subscription_id                        = var.subscription_id
-  aad_groups                             = var.aad_groups
-  account_id                             = var.account_id
-  databricks_groups                      = module.metastore_and_users.databricks_groups
-  databricks_users                       = module.metastore_and_users.databricks_users
-  databricks_sps                         = module.metastore_and_users.databricks_sps
-  databricks_workspace_id                = module.azure_databricks_workspace.databricks_workspace_id
-  azurerm_databricks_access_connector_id = module.metastore_and_users.azurerm_databricks_access_connector_id
-  metastore_id                           = module.metastore_and_users.metastore_id
-  databricks_workspace_host_url          = module.azure_databricks_workspace.databricks_workspace_host_url
-  azurerm_storage_account_unity_catalog  = module.metastore_and_users.azurerm_storage_account_unity_catalog
-}
+# module "azure_databricks_unity_catalog" {
+#   source                                 = "../../modules/adb-unity-catalog"
+#   environment                            = var.environment
+#   subscription_id                        = var.subscription_id
+#   aad_groups                             = var.aad_groups
+#   account_id                             = var.account_id
+#   databricks_groups                      = module.metastore_and_users.databricks_groups
+#   databricks_users                       = module.metastore_and_users.databricks_users
+#   databricks_sps                         = module.metastore_and_users.databricks_sps
+#   databricks_workspace_id                = module.azure_databricks_workspace.databricks_workspace_id
+#   azurerm_databricks_access_connector_id = module.metastore_and_users.azurerm_databricks_access_connector_id
+#   metastore_id                           = module.metastore_and_users.metastore_id
+#   databricks_workspace_host_url          = module.azure_databricks_workspace.databricks_workspace_host_url
+#   azurerm_storage_account_unity_catalog  = module.metastore_and_users.azurerm_storage_account_unity_catalog
+# }
